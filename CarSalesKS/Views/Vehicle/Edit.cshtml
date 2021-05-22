@@ -1,0 +1,326 @@
+﻿@model VehicleWithDetails
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<AutoKsUser> SignInManager
+@inject UserManager<AutoKsUser> UserManager
+
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Motor Services</title>
+    <meta name="description" content="">
+    <!--
+    Motor Template
+    http://www.templatemo.com/tm-463-motor
+    -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,400italic,700' rel='stylesheet' type='text/css'>
+    <link href="~/lib/bootstrap/dist/Template/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/lib/bootstrap/dist/Template/css/font-awesome.min.css" rel="stylesheet">
+    <link href="~/lib/bootstrap/dist/Template/css/templatemo-style.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+<body class="services-page" style="background: black;">
+
+    <!-- Preloader -->
+    <div id="loader-wrapper">
+        <div id="loader"></div>
+        <div class="loader-section section-left"></div>
+        <div class="loader-section section-right"></div>
+    </div>
+    <!-- End Preloader -->
+
+
+
+    <center><h1 class="welcome-title-1">Edit your vehicle</h1></center>
+    <hr />
+    <div class="row">
+        <form asp-action="Edit" style="width:100%; display:flex;">
+            <div class="col-sm-2">
+            </div>
+            <div class="col-xl-4" style="font-size: 20px; ">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Brand" class="text-white"></label>
+                    <select asp-for="Brand" class="form-control" asp-items=@((IEnumerable<SelectListItem>) ViewData["Make"]) onchange="changeddlEdit(this)"><option>Select Brand</option></select>
+                    <span asp-validation-for="Brand" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Price" class="text-white"></label>
+                    <input asp-for="Price" class="form-control" />
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Color" class="text-white"></label>
+                    <input asp-for="Color" class="form-control" />
+                    <span asp-validation-for="Color" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Kilometers" class="text-white"></label>
+                    <input asp-for="Kilometers" class="form-control" />
+                    <span asp-validation-for="Kilometers" class="text-danger"></span>
+                </div>
+
+                @*<div class="form-group">
+            <label asp-for="Description" class="text-white"></label>
+            <textarea asp-for="Description" class="form-control" style=" height:12rem;"> </textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>*@
+
+                @*<div class="form-group form-check text-white">
+            <label class="form-check-label">
+                <input class="form-check-input" asp-for="CostumerHasVisitedTheCar" /> @Html.DisplayNameFor(model => model.CostumerHasVisitedTheCar)
+            </label>
+        </div>*@
+
+                <div class="form-group" >
+                    <label asp-for="Fuel" class="text-white"></label>
+                    <select asp-for="Fuel" class="form-control">
+
+                        <option>Gasoline</option>
+                        <option>Diesel</option>
+                        <option>Electric</option>
+                        <option>Electric/Gasoline</option>
+                        <option>Electric/Diesel</option>
+                    </select>
+                    <span asp-validation-for="Fuel" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="InsertDate" class="text-white"></label>
+                    <input asp-for="InsertDate" class="form-control" />
+                    <span asp-validation-for="InsertDate" class="text-danger"></span>
+                </div>
+                <div class="form-group" style="margin-bottom: 100px;">
+                    <label asp-for="Description" class="text-white"></label>
+                    <textarea asp-for="Description" class="form-control" style=" height:12rem;"> </textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                @*<div class="form-group form-check text-white">
+            <label class="form-check-label">
+                <input class="form-check-input" asp-for="IsRegistered" /> @Html.DisplayNameFor(model => model.IsRegistered)
+            </label>
+        </div>*@
+
+                <div class="form-group" style="margin-left: 0; ">
+                    <a class="about-link " asp-action="Index" style="height: 50px; font-size: 18px; margin-right:30px;">Back to List</a>
+                    <input type="button" value="Save Changes" class="about-link" style="height: 50px; font-size: 18px; border:0;" />
+                </div>
+            </div>
+            <div class="col-xl-4" style="font-size: 20px;">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Model" class="text-white"></label>
+                    <select asp-for="Model" class="form-control" id="carmodeledit"></select>
+
+                    <span asp-validation-for="Model" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Interior" class="text-white"></label>
+                    <input asp-for="Interior" class="form-control" />
+                    <span asp-validation-for="Interior" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="ProductionYear" class="text-white"></label>
+                    <select asp-for="ProductionYear" class="form-control">
+                        @for (int i = 0; i < 100; i++)
+                        {
+                            <option>@DateTime.Now.AddYears(-i).Year</option>
+                        };
+                    </select>
+                    <span asp-validation-for="ProductionYear" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="City" class="text-white"></label>
+                    <input asp-for="City" class="form-control" />
+                    <span asp-validation-for="City" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Photo" class="text-white"></label>
+                    <input asp-for="Photo" class="form-control" />
+                    <span asp-validation-for="Photo" class="text-danger"></span>
+                </div>
+
+                @*<div class="form-group form-check text-white">
+            <label class="form-check-label">
+                <input class="form-check-input" asp-for="IsManual" /> @Html.DisplayNameFor(model => model.IsManual)
+            </label>
+        </div>*@
+
+                @*<div class="form-group form-check text-white">
+            <label class="form-check-label">
+                <input class="form-check-input" asp-for="IsCustomDutyPaid" /> @Html.DisplayNameFor(model => model.IsCustomDutyPaid)
+            </label>
+        </div>*@
+
+                <div class="form-group">
+                    <label asp-for="Owners" class="text-white"></label>
+                    <input asp-for="Owners" class="form-control" />
+                    <span asp-validation-for="Owners" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="NumberOfDoors" class="text-white"></label>
+                    <input asp-for="NumberOfDoors" class="form-control" />
+                    <span asp-validation-for="NumberOfDoors" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="NumberOfSeates" class="text-white"></label>
+                    <input asp-for="NumberOfSeates" class="form-control" />
+                    <span asp-validation-for="NumberOfSeates" class="text-danger"></span>
+                </div>
+                <div class="form-group form-check text-white">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="CostumerHasVisitedTheCar" /> @Html.DisplayNameFor(model => model.CostumerHasVisitedTheCar)
+                    </label>
+                </div>
+                <div class="form-group form-check text-white">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="IsRegistered" /> @Html.DisplayNameFor(model => model.IsRegistered)
+                    </label>
+                </div>
+                <div class="form-group form-check text-white">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="IsUsed" /> @Html.DisplayNameFor(model => model.IsUsed)
+                    </label>
+                </div>
+
+                <div class="form-group form-check text-white">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="HasAirCondition" /> @Html.DisplayNameFor(model => model.HasAirCondition)
+                    </label>
+                </div>
+
+                <div class="form-group form-check text-white">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="HasElectricHeatedSeats" /> @Html.DisplayNameFor(model => model.HasElectricHeatedSeats)
+                    </label>
+                </div>
+
+                <div class="form-group form-check text-white">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="HasSportPackage" /> @Html.DisplayNameFor(model => model.HasSportPackage)
+                    </label>
+                </div>
+
+                <div class="form-group form-check text-white">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="HasPanoramaRoof" /> @Html.DisplayNameFor(model => model.HasPanoramaRoof)
+                    </label>
+                </div>
+
+                <div class="form-group form-check text-white">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="HasCentralDoorLock" /> @Html.DisplayNameFor(model => model.HasCentralDoorLock)
+                    </label>
+                </div>
+
+                <div class="form-group form-check text-white">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="HasParkingSensors" /> @Html.DisplayNameFor(model => model.HasParkingSensors)
+                    </label>
+                </div>
+
+                <div class="form-group form-check text-white">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="HasParkingCamera" /> @Html.DisplayNameFor(model => model.HasParkingCamera)
+                    </label>
+                </div>
+                <div class="form-group form-check text-white">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="IsCustomDutyPaid" /> @Html.DisplayNameFor(model => model.IsCustomDutyPaid)
+                    </label>
+                </div>
+
+
+                <div class="form-group form-check text-white">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="IsNonSmokingVehicle" /> @Html.DisplayNameFor(model => model.IsNonSmokingVehicle)
+                    </label>
+                </div>
+                <div class="form-group form-check text-white">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="IsManual" /> @Html.DisplayNameFor(model => model.IsManual)
+                    </label>
+                </div>
+
+                @*<div class="form-group">
+            <label asp-for="CubicCapacity" class="text-white"></label>
+            <input asp-for="CubicCapacity" class="form-control" />
+            <span asp-validation-for="CubicCapacity" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ModifyDate" class="text-white"></label>
+            <input asp-for="ModifyDate" class="form-control" />
+            <span asp-validation-for="ModifyDate" class="text-danger"></span>
+        </div>*@
+                @*<div class="form-group">
+                    <label asp-for="InsertDate" class="text-white"></label>
+                    <input asp-for="InsertDate" class="form-control" />
+                    <span asp-validation-for="InsertDate" class="text-danger"></span>
+                </div>*@
+            </div>
+        </form>
+    </div>
+
+
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }
+    <script>
+
+        function changeddlEdit(obj) {
+
+            var text = obj.options[obj.selectedIndex].text;
+            $.getJSON('/Vehicle/ModelList/' + text, function (data) {
+                var items = '<option>Select Model</option>';
+                $.each(data, function (i, state) {
+                    items += "<option value='" + state + "'>" + state + "</option>";
+                });
+                $('#carmodeledit').html(items);
+            });
+        }
+    </script>
+
+    <script type="text/javascript" src="~/lib/bootstrap/dist/Template/js/jquery-1.11.2.min.js"></script>      <!-- jQuery -->
+    <script type="text/javascript" src="~/lib/bootstrap/dist/Template/js/templatemo-script.js"></script>      <!-- Templatemo Script -->
+    <script defer src="~/lib/bootstrap/dist/Template/js/jquery.flexslider-min.js"></script><!-- FlexSlider -->
+    <script>
+        $(window).load(function () {
+            $('.flexslider').flexslider({
+                animation: "slide",
+                slideshow: false,
+                prevText: "&#xf104;",
+                nextText: "&#xf105;"
+            });
+
+            // Remove preloader
+            // https://ihatetomatoes.net/create-custom-preloading-screen/
+            $('body').addClass('loaded');
+        });
+    </script>
+</body>
+</html>
